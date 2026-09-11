@@ -1,6 +1,12 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+interface CookieToSet {
+  name: string;
+  value: string;
+  options: CookieOptions;
+}
+
 /**
  * Supabase client untuk digunakan di Server Component / Server Action / Route Handler.
  * Membaca & menulis session lewat cookie Next.js.
@@ -16,10 +22,10 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: CookieToSet[]) {
           try {
             cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options as CookieOptions);
+              cookieStore.set(name, value, options);
             });
           } catch {
             // Dipanggil dari Server Component (bukan Server Action/Route Handler).
