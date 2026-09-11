@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background-color: theme("colors.kreova.bg");
+  background-image: theme("backgroundImage.kreova-radial");
+  background-attachment: fixed;
+}
