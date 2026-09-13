@@ -14,6 +14,14 @@ const config: Config = {
           accent2: "#7C5CFF",
           muted: "#8B93A7",
         },
+        // Palet khusus untuk halaman Public Digital Profile ("/u/[username]") —
+        // warm ivory + espresso, terpisah dari tema dashboard/login/register.
+        identity: {
+          bg: "#F8F6F2",
+          primary: "#3A2E27",
+          secondary: "#E9E1D8",
+          accent: "#8B735F",
+        },
       },
       backgroundImage: {
         "kreova-gradient": "linear-gradient(135deg, #4CC9F0 0%, #7C5CFF 100%)",

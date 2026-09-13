@@ -208,3 +208,107 @@ sini secara otomatis. Kode sudah saya review manual (tipe TypeScript,
 konsistensi RLS, null-safety field opsional). **Tolong jalankan
 `npm install` lalu `npm run lint` dan `npm run build` di komputer kamu**,
 dan kirim ke saya kalau ada error — saya bantu perbaiki.
+
+---
+
+## REDESIGN — Public Digital Profile (warm ivory / premium)
+
+### ✅ Logo Kreova sudah pakai aset asli
+
+Logo yang kamu kirim sudah disimpan di `public/logo.png` dan dipakai lewat
+`src/components/KreovaLogo.tsx` (pakai `next/image`, bukan lagi SVG
+placeholder).
+
+### Save Contact = simpan kontak WhatsApp
+
+Sesuai klarifikasi kamu, tombol **Save Contact** sekarang **hanya muncul
+kalau field WhatsApp terisi** — karena maksud tombol ini memang
+menyimpan kontak WhatsApp (bukan kontak umum tanpa nomor telepon). Kalau
+WhatsApp kosong (seperti data demo Naufal sekarang), tombol ini tidak
+akan tampil sama sekali; begitu kamu isi nomor WhatsApp di dashboard dan
+publish, tombolnya otomatis muncul.
+
+### File yang ditambahkan/diubah
+
+```
+kreova/
+├── tailwind.config.ts                        # (diubah) tambah palet warna "identity" (khusus halaman ini)
+├── src/
+│   ├── lib/
+│   │   └── vcard.ts                           # (baru) generate isi file .vcf dari data profile
+│   ├── components/
+│   │   ├── KreovaLogo.tsx                     # (baru) logo placeholder
+│   │   ├── SaveContactButton.tsx              # (baru) tombol "Save Contact" -> download .vcf
+│   │   ├── SocialLinkButton.tsx               # (diubah total) gaya baris/list, bukan tombol besar
+│   │   └── PublicProfileCard.tsx              # (diubah total) redesign penuh
+│   └── app/u/[username]/
+│       ├── layout.tsx                         # (baru) tema warm ivory, HANYA berlaku di route ini
+│       ├── page.tsx                           # (diubah) state "unpublished" pakai desain baru
+│       ├── not-found.tsx                      # (diubah) desain baru
+│       └── loading.tsx                        # (diubah) skeleton lebih subtle
+```
+
+**Tidak ada perubahan** di dashboard, login, register, landing page, atau
+database/backend — sesuai permintaan.
+
+### Yang berubah secara visual
+
+- Palet warna baru khusus halaman ini: ivory `#F8F6F2`, espresso
+  `#3A2E27`, beige `#E9E1D8`, taupe `#8B735F` — didefinisikan sebagai
+  token `identity.*` di Tailwind, terpisah dari tema dark navy yang
+  masih dipakai halaman lain. Diisolasi lewat `layout.tsx` khusus route
+  ini supaya tidak bocor ke halaman lain.
+- Tidak ada lagi bounding "card" besar — konten langsung di atas
+  background, whitespace lebih lega.
+- Foto profil jadi rounded-rectangle (bukan lingkaran), lebih besar,
+  jadi focal point.
+- Nama jadi elemen tipografi paling dominan.
+- Info akademik ditampilkan sebagai 2 baris ringkas dengan ikon kecil
+  (jurusan, lalu "Universitas · Angkatan") — bukan tabel.
+- Tombol WhatsApp/Instagram/LinkedIn didesain ulang jadi baris
+  list-style (bukan tombol besar berjejer), hanya muncul kalau datanya
+  ada.
+- Branding "Powered by Kreova" dibuat kecil & subtle di bagian bawah.
+- State "belum publish" dan "Profile Not Found" didesain ulang minimal
+  (ikon lingkaran + teks + tombol Kembali), fungsinya tetap sama:
+  keduanya tetap dibedakan pesannya (tidak digabung jadi satu state)
+  supaya tidak membocorkan apakah suatu username ada atau tidak.
+- Loading state jadi skeleton pulse yang jauh lebih halus.
+
+### Save Contact dihapus
+
+Fitur "Save Contact" (download .vcf) sudah **dihapus total** sesuai
+permintaan — file `SaveContactButton.tsx` dan `lib/vcard.ts` sudah tidak
+ada lagi. Baris WhatsApp tetap tampil sebagai action biasa (klik → buka
+chat WhatsApp).
+
+### Warna selang-seling (espresso / beige)
+
+Semua baris di bawah nama (jurusan, universitas, WhatsApp, Instagram,
+LinkedIn — hanya yang datanya terisi) sekarang digabung jadi satu daftar
+dan diberi warna **selang-seling otomatis** berdasarkan urutan: panel
+ke-1, ke-3, ke-5, dst → warna espresso gelap (teks putih); panel ke-2,
+ke-4, dst → tetap beige terang (teks coklat gelap). Ini diatur di
+`ProfileInfoRow.tsx` lewat prop `dark`, dihitung otomatis dari index di
+`PublicProfileCard.tsx` — jadi polanya tetap benar apa pun kombinasi data
+yang terisi (tidak hardcode ke field tertentu).
+
+### Cara mengetes
+
+1. Jalankan `npm install` (tidak ada dependency baru, tapi aman untuk
+   dijalankan ulang).
+2. `npm run dev`, buka `/u/naufal` (harus publish dulu di dashboard).
+3. Cek tampilan baru: foto rounded-rectangle, nama besar, 2 baris info
+   akademik dengan ikon, tombol Save Contact di atas, lalu Instagram di
+   bawahnya (WhatsApp/LinkedIn tidak muncul karena datanya kosong).
+4. Klik **Save Contact** → file `.vcf` harus ter-download.
+5. Klik **Instagram** → harus buka `instagram.com/nzaki30` di tab baru.
+6. Cek juga responsif di lebar 360px/375px/390px/430px (resize browser
+   atau device toolbar di DevTools).
+7. Buka `/u/username-yang-belum-publish` dan `/u/username-yang-gak-ada`
+   → pastikan 2 pesan berbeda tetap muncul, dengan desain baru.
+
+### Perubahan database
+
+**Tidak ada.** Redesign ini murni UI — tidak menyentuh tabel, RLS, atau
+struktur data.
