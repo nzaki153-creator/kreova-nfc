@@ -312,3 +312,46 @@ yang terisi (tidak hardcode ke field tertentu).
 
 **Tidak ada.** Redesign ini murni UI — tidak menyentuh tabel, RLS, atau
 struktur data.
+
+---
+
+## FIX — Upload foto lambat + tambah fitur Crop
+
+### Masalah
+
+Upload foto terasa lama karena foto dari HP biasanya berukuran besar
+(beberapa MB) dan langsung diupload apa adanya.
+
+### Perbaikan
+
+- **`src/components/PhotoCropModal.tsx`** (baru) — begitu foto dipilih,
+  modal crop terbuka dulu (bisa digeser posisinya & di-zoom pakai
+  slider) sebelum foto benar-benar dipakai. Hasil crop di-render ke
+  canvas 640×640px lalu dikompres jadi JPEG kualitas 85% — jadi selain
+  bisa disesuaikan komposisinya, ukuran file juga otomatis mengecil
+  sebelum sampai ke langkah upload.
+- **`src/components/DashboardForm.tsx`** (diubah) — alur ganti foto
+  sekarang: pilih file → modal crop terbuka → klik **Gunakan Foto** →
+  hasil crop dipasang ke input file (lewat `DataTransfer`) → baru
+  benar-benar ter-upload saat klik **Simpan Perubahan**. Klik **Batal**
+  di modal akan membatalkan tanpa mengubah apa pun.
+- **`next.config.mjs`** (diubah) — batas ukuran body Server Action
+  dinaikkan ke 8MB (default Next.js cuma 1MB) sebagai jaring pengaman.
+- `src/lib/compressImage.ts` yang sempat dibuat di iterasi sebelumnya
+  sudah **dihapus** — fungsinya sekarang digantikan proses crop di atas
+  (tidak perlu dua langkah kompresi terpisah).
+
+### Cara mengetes
+
+1. `npm install` (tidak ada dependency baru).
+2. Buka `/dashboard`, klik **Ganti Foto**, pilih foto dari galeri/kamera.
+3. Modal crop harus terbuka — coba geser fotonya & mainkan slider zoom.
+4. Klik **Gunakan Foto** — preview foto di dashboard harus update sesuai
+   hasil crop.
+5. Klik **Simpan Perubahan** — proses upload harus terasa jauh lebih
+   cepat dibanding sebelumnya.
+6. Buka `/u/naufal` untuk pastikan foto baru tampil dengan benar.
+
+### Perubahan database
+
+Tidak ada.
