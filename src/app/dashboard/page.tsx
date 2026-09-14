@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardForm } from "@/components/DashboardForm";
 import { PublishToggle } from "@/components/PublishToggle";
@@ -59,14 +60,14 @@ export default async function DashboardPage() {
         <div className="flex flex-wrap items-center gap-3">
           <PublishToggle isPublished={profile.is_published} />
           {profile.username ? (
-            <a
+            <Link
               href={`/u/${profile.username}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-medium text-kreova-accent hover:underline"
             >
               {profile.is_published ? "View Public Profile" : "Preview Profile"}
-            </a>
+            </Link>
           ) : (
             <span className="text-sm text-kreova-muted/60">
               Isi username dulu untuk preview

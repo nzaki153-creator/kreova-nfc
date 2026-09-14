@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowLeft, UserRound } from "lucide-react";
 
 export default function NotFound() {
@@ -11,13 +12,13 @@ export default function NotFound() {
         <p className="mt-2 text-sm text-identity-primary/60">
           Username ini tidak terdaftar di Kreova.
         </p>
-        <a
+        <Link
           href="/"
           className="mt-6 inline-flex items-center gap-2 rounded-full bg-identity-primary/5 px-4 py-2 text-xs font-medium text-identity-primary/70 transition hover:bg-identity-primary/10"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
           Kembali
-        </a>
+        </Link>
       </div>
       <footer className="flex items-center justify-center gap-2 pb-2 text-xs text-identity-accent/70">
         <span className="h-px w-6 bg-identity-accent/20" />

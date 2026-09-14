@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, UserRound } from "lucide-react";
 import { getPublicProfile } from "@/lib/publicProfile";
@@ -48,13 +49,13 @@ export default async function PublicProfilePage({ params }: PageProps) {
           <p className="mt-2 text-sm text-identity-primary/60">
             Pengguna ini belum membagikan identitas digitalnya.
           </p>
-          <a
+          <Link
             href="/"
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-identity-primary/5 px-4 py-2 text-xs font-medium text-identity-primary/70 transition hover:bg-identity-primary/10"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             Kembali
-          </a>
+          </Link>
         </div>
         <footer className="flex items-center justify-center gap-2 pb-2 text-xs text-identity-accent/70">
           <span className="h-px w-6 bg-identity-accent/20" />
